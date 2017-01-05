@@ -33,9 +33,6 @@ public class MainActivity extends AppCompatActivity {
     AlarmManager alarmManager;
     private PendingIntent pending_intent, pending_intent1;
 
-    private static MainActivity inst;
-
-    private AlarmReceiver alarm;
     Calendar calendar;
     public Context context;
     Intent myIntent;
@@ -93,52 +90,39 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.btnCounter)
     public void onClickbtnCounter() {
-        Log.e("Timeeee", String.valueOf(System.currentTimeMillis()));
-//        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-//        startActivity(intent);
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        startActivity(intent);
     }
 
-    private void setUI(){
-        if (repeat15Min){
+    private void setUI() {
+        if (repeat15Min) {
             swt15Min.setChecked(true);
         } else {
             swt15Min.setChecked(false);
         }
-        if (repeat1Hour){
+        if (repeat1Hour) {
             swtHour.setChecked(true);
         } else {
             swtHour.setChecked(false);
         }
     }
 
-    private void setPlayMedia(int quote_id){
+    private void setPlayMedia(int quote_id) {
         calendar = Calendar.getInstance();
-//
-//        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-//        int minute = calendar.get(Calendar.MINUTE);
-//
-//        calendar.set(Calendar.HOUR_OF_DAY, hour);
-//        calendar.set(Calendar.MINUTE, minute);
 
         myIntent.putExtra("extra", "yes");
         myIntent.putExtra("quote_id", String.valueOf(quote_id));
 
         if (quote_id == 0) {
-            myIntent.putExtra("ringtone", R.raw.subhan_wa_bh);
+            myIntent.putExtra("ringtone", R.raw.e);
             pending_intent = PendingIntent.getBroadcast(MainActivity.this, quote_id, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//            pending_intent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + AlarmManager.INTERVAL_FIFTEEN_MINUTES,
-//                                                AlarmManager.INTERVAL_FIFTEEN_MINUTES, pending_intent);
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 30000,
-                    30000, pending_intent);
-            Log.e("Timeeee", String.valueOf(System.currentTimeMillis() + AlarmManager.INTERVAL_FIFTEEN_MINUTES));
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pending_intent);
         }
         if (quote_id == 1) {
             myIntent.putExtra("ringtone", R.raw.subhan_wa_bh);
             pending_intent = PendingIntent.getBroadcast(MainActivity.this, quote_id, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + Constants.TIME_1_HOUR, Constants.TIME_1_HOUR, pending_intent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_HOUR, pending_intent);
         }
-//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), ,pending_intent);
     }
 
     private void StopMedia(int quote_id) {
@@ -150,25 +134,5 @@ public class MainActivity extends AppCompatActivity {
         alarmManager.cancel(pending_intent);
     }
 
-    public void resetAlarm(int quote_id){
-        try {
-            myIntent.putExtra("extra", "no");
-            myIntent.putExtra("quote_id", String.valueOf(quote_id));
-            sendBroadcast(myIntent);
-
-            pending_intent = PendingIntent.getBroadcast(MainActivity.this, quote_id, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            alarmManager.cancel(pending_intent);
-
-            // register again
-            if (repeat15Min) return;
-            myIntent = new Intent(getApplicationContext(), AlarmReceiver.class);
-            alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-            myIntent.putExtra("extra", "yes");
-            myIntent.putExtra("ringtone", R.raw.subhan_wa_bh);
-            pending_intent = PendingIntent.getBroadcast(MainActivity.this, quote_id, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 30000, pending_intent);
-        } catch (Exception ex) {
-        }
-    }
 
 }
