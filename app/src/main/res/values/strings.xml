@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Blessing</string>
+
+    <string name="every15Min">Estighfar Every 15 Mins</string>
+    <string name="everyhour">Tasbeeh Every Hour</string>
+    <string name="counter">Tasbeeh Counter</string>
+    <string name="switchOn">On</string>
+    <string name="switchOff">Off</string>
+    <string name="titleDetail">Title</string>
+    <string name="back">Back</string>
+    <string name="zero">Zero</string>
+</resources>
