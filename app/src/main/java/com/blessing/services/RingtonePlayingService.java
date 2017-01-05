@@ -22,8 +22,6 @@ import android.util.Log;
 
 import com.blessing.MainActivity;
 import com.blessing.R;
-import com.blessing.util.Constants;
-import com.blessing.util.WakeLocker;
 
 public class RingtonePlayingService extends Service {
 
@@ -33,8 +31,7 @@ public class RingtonePlayingService extends Service {
     private int startId;
 
     @Override
-    public IBinder onBind(Intent intent)
-    {
+    public IBinder onBind(Intent intent) {
         Log.e("MyActivity", "In the Richard service");
         return null;
     }
@@ -45,7 +42,7 @@ public class RingtonePlayingService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // get quote_id
         String quote_id = intent.getExtras().getString("quote_id");
-        Log.e("Service: richard id is " , quote_id);
+        Log.e("Service: richard id is ", quote_id);
 
         final NotificationManager mNM = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
@@ -53,8 +50,8 @@ public class RingtonePlayingService extends Service {
         Intent intent1 = new Intent(this.getApplicationContext(), MainActivity.class);
         PendingIntent pIntent = PendingIntent.getActivity(this, Integer.valueOf(quote_id), intent1, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification mNotify  = new Notification.Builder(this)
-                .setContentTitle("Reading" + "!")
+        Notification mNotify = new Notification.Builder(this)
+                .setContentTitle("Reading " + quote_id + " now..")
                 .setContentText("Click me!")
                 .setSmallIcon(R.drawable.icon_app)
                 .setContentIntent(pIntent)
@@ -80,16 +77,9 @@ public class RingtonePlayingService extends Service {
 
         int ringtone = intent.getExtras().getInt("ringtone");
 
-        if(!this.isRunning && startId == 1) {
+        if (!this.isRunning && startId == 1) {
             Log.e("if there was not sound ", " and you want start");
 
-//            assert quote_id != null;
-//            if (quote_id.equals("0")) {
-//                mMediaPlayer = MediaPlayer.create(this, R.raw.e);
-//            }
-//            if (quote_id.equals("1")) {
-//                mMediaPlayer = MediaPlayer.create(this, R.raw.subhan_wa_bh);
-//            }
             mMediaPlayer = MediaPlayer.create(this, ringtone);
             mMediaPlayer.start();
 
@@ -98,21 +88,22 @@ public class RingtonePlayingService extends Service {
             this.isRunning = true;
             this.startId = 0;
 
-        }
-        else if (!this.isRunning && startId == 0){
+        } else if (!this.isRunning && startId == 0) {
             Log.e("if there was not sound ", " and you want end");
 
             this.isRunning = false;
             this.startId = 0;
-        }
-
-        else if (this.isRunning && startId == 1){
+        } else if (this.isRunning && startId == 1) {
             Log.e("if there is sound ", " and you want start");
+
+            mMediaPlayer = MediaPlayer.create(this, ringtone);
+            mMediaPlayer.start();
+
+            mNM.notify(0, mNotify);
 
             this.isRunning = true;
             this.startId = 0;
-        }
-        else {
+        } else {
             Log.e("if there is sound ", " and you want end");
 
             mMediaPlayer.stop();
@@ -123,7 +114,6 @@ public class RingtonePlayingService extends Service {
         }
 
         Log.e("MyActivity", "In the service");
-        WakeLocker.release();
 
         return START_NOT_STICKY;
     }

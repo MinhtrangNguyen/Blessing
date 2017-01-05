@@ -48,12 +48,14 @@ public class MainActivity extends AppCompatActivity {
         this.context = this;
         myIntent = new Intent(this.context, AlarmReceiver.class);
         spHandler = new SharedPreferencesHandler(this);
-        setUI();
+
         // Get the alarm manager service
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         repeat15Min = spHandler.getBooleanSavedPreferences("check15Min");
         repeat1Hour = spHandler.getBooleanSavedPreferences("check1Hour");
+
+        setUI();
 
     }
 
@@ -116,12 +118,12 @@ public class MainActivity extends AppCompatActivity {
         if (quote_id == 0) {
             myIntent.putExtra("ringtone", R.raw.e);
             pending_intent = PendingIntent.getBroadcast(MainActivity.this, quote_id, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_FIFTEEN_MINUTES, pending_intent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 2 * 60 * 1000, pending_intent);
         }
         if (quote_id == 1) {
             myIntent.putExtra("ringtone", R.raw.subhan_wa_bh);
             pending_intent = PendingIntent.getBroadcast(MainActivity.this, quote_id, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_HOUR, pending_intent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 5 * 60 * 1000, pending_intent);
         }
     }
 
